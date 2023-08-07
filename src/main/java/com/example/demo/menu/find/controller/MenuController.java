@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("menu/find")
+@RequestMapping("/menu")
 public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @GetMapping
+    @GetMapping("/find")
     public String getAllInfoAsJson() {
         // Info 테이블의 모든 정보를 JSON 형태로 반환
         return menuService.getAllInfoAsJson();

@@ -1,10 +1,9 @@
-package com.example.demo.Home.model;
+package com.example.demo.Home.upload.model;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class TextPictureDataDTO {
+public class TextPictureData {
     private String text1;
     private String text2;
     private String text3;
