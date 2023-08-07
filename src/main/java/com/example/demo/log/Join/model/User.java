@@ -14,9 +14,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userid;
-    private String password;
-    private String username;
+    private String userId;
+    private String userPassword;
+    private String name;
     private String address;
+    private String phoneNumber;
     private String residentRegistrationNumber; // 주민번호
 }
