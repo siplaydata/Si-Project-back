@@ -1,0 +1,16 @@
+package com.example.demo.Review.controller;
+
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("reviews")
+public class ReviewController {
+    @PostMapping
+    public String writeReview(Authentication authentication){
+        return authentication.getName() + "님 리뷰 등록이 완료 되었습니다.";
+    }
+}
