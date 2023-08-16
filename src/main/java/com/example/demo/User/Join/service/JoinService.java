@@ -35,6 +35,11 @@ public class JoinService {
         joinUser.setNumber(joinDTO.getNumber());
         joinUser.setEmail(joinDTO.getEmail());
 
-        return joinRepository.save(joinUser) != null;
+        try {
+            joinRepository.save(joinUser);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        }
     }
 }

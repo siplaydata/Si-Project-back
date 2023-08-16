@@ -14,15 +14,11 @@ public class JoinController {
     }
     @PostMapping
     public Boolean signUp(@RequestBody JoinDTO joinDTO) {
-        if (joinDTO.getUsername() == null || joinDTO.getUsername().isEmpty()) {
-            errorManager("", "아이디를 입력해주세요.");
-        }
-        if (joinDTO.getPassword() == null || joinDTO.getPassword().isEmpty()) {
-            errorManager("", "비밀번호를 입력하세요.");
-        }
-        errorManager(joinDTO.getNickname(), "닉네임을 입력해주세요.");
+        if (joinDTO.getUsername() == null || joinDTO.getUsername().isEmpty()) { errorManager("", "아이디를 입력해주세요."); }
+        if (joinDTO.getPassword() == null || joinDTO.getPassword().isEmpty()) { errorManager("", "비밀번호를 입력하세요."); }
+        if (joinDTO.getPassword() == null || joinDTO.getPassword().isEmpty()) { errorManager("", "닉네임을 입력해주세요."); }
 
-        if (joinService.isIdUnique(joinDTO.getUsername()) && joinService.isIdUnique(joinDTO.getNickname())){
+        if (checkUserid(joinDTO.getUsername()) && checkNickname(joinDTO.getNickname())) {
             return joinService.signUp(joinDTO);
         } else {
             if (!joinService.isIdUnique(joinDTO.getUsername())) {
@@ -31,7 +27,7 @@ public class JoinController {
             if (!joinService.isNicknameUnique(joinDTO.getNickname())){
                 errorManager("", "중복된 닉네임 입니다.");
             }
-            return false;
+            throw new RuntimeException("알 수 없는 오류");
         }
     }
     @PostMapping("/check-userid")

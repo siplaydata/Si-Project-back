@@ -43,7 +43,6 @@ dependencies {
 	// build.gradle
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	// 맵퍼 필요함
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
