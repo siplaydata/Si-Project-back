@@ -2,31 +2,18 @@ package com.example.cocktail.Home.UploadPost.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "cocktail")
+@Table(name = "alcohol_names")
 public class Recipe {
     @Id
-    @Column(name = "cnum")
-    private String cocktailNum;
+    private String id;
 
-    @Column(name = "name")
-    private String cocktailName;
+    private String name;
 
-    @Column(name = "ingredients")
-    private String ingredients;
-
-    @Column(name = "cmethod")
-    private String cmethod;
-
-    @Column(name = "garnish")
-    private String garnish;
-
-    @Column(name = "history")
-    private String history;
+    private String category;
 }

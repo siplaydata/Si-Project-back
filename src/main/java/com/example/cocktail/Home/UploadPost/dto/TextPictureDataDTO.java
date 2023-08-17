@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class TextPictureData {
+public class TextPictureDataDTO {
     private String[] textData;
-    private MultipartFile[] PictureData;
+    private MultipartFile[] pictureData;
 }

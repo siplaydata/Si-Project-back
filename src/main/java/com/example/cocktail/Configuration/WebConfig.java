@@ -63,8 +63,8 @@ public class WebConfig implements WebMvcConfigurer {
         return new RestTemplate();
     }
 
-    @Bean
-    public WebClient.Builder webClientBuilder(@Value("${flask}") String flaskServerUrl) {
-        return WebClient.builder().baseUrl(flaskServerUrl);
-    }
+//    @Bean
+//    public WebClient.Builder webClientBuilder(@Value("${flask}") String flaskServerUrl) {
+//        return WebClient.builder().baseUrl(flaskServerUrl);
+//    }
 }
