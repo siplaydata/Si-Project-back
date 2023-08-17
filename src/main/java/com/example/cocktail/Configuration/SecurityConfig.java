@@ -29,15 +29,20 @@ public class SecurityConfig {
         return httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
-                .cors().and()
-                .authorizeRequests()
-                .antMatchers("/reviews").authenticated() // "/community/**" 경로에 대해서 인증 필요
+                .cors()
+                .and()
+            .authorizeRequests()
+                .antMatchers("/board").permitAll() // /board는 모두 접근 가능
+                .antMatchers("/board/**").authenticated() // /board 이후의 엔드포인트는 인증 필요
                 .anyRequest().permitAll() // 그 외의 요청은 모두 허용
                 .and()
-                .sessionManagement()
+            .formLogin()
+                .loginPage("/login").permitAll()
+                .and()
+            .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT사용하는 경우 씀
                 .and()
-                .addFilterBefore(new JwtFilter(loginService, secretKey), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtFilter(loginService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
