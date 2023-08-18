@@ -5,6 +5,8 @@ import com.example.cocktail.User.LogIn.repository.LoginRepository;
 import com.example.cocktail.Utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +19,25 @@ public class LoginService {
     @Value("${jwt.token.secret}")
     private String key;
 
-    public LoginUser findByUserName(String username) {
-        return loginRepository.findByUsername(username);
+    private boolean logInManager(LoginUser loginUser, String password){
+        if (loginUser == null || loginUser.getUsername() == null) {
+            throw new UsernameNotFoundException("일치 하는 아이디가 없습니다.");
+        }
+        if (!encoder.matches(loginUser.getPassword(), password)) {
+            throw new BadCredentialsException("비밀번호가 일치 하지 않습니다.");
+        }
+        return true;
     }
-    public String login(String username, String password) throws Exception {
-        // userid 없음
-        LoginUser loginUser = findByUserName(username);
+    public String logIn(String username, String password){
+        LoginUser loginUser = loginRepository.findByUsername(username);
 
-        Long expireTimeMs = 1000 * 60 * 60 * 24L; // 24시간 (1일)
-        // 앞에서 에러 안나면 토큰 발행.
-        return JwtUtil.createJwt(loginUser.getNickname(), key, expireTimeMs);
+        if (logInManager(loginUser, password)){
+            // 24시간 (1일)
+            Long expireTimeMs = 1000 * 60 * 60 * 24L;
+            return JwtUtil.createJwt(loginUser.getNickname(), key, expireTimeMs);
+        } else {
+            return null;
+        }
     }
 }
+

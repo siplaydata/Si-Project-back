@@ -17,19 +17,13 @@ public class LoginController {
     private LoginService loginService;
     @Autowired
     private BCryptPasswordEncoder encoder;
-    private void errorManager(String value, String errorMessage) {
-        if (value.isEmpty()) { throw new IllegalArgumentException(errorMessage); }
+    private void dtoIsNotEmpty(LoginDTO dto){
+        if (dto.getUsername().isEmpty()) { throw new IllegalArgumentException("아이디를 입력하세요."); }
+        if (dto.getPassword().isEmpty()) { throw new IllegalArgumentException("비밀번호를 입력하세요."); }
     }
     @PostMapping
-    public String logIn(@RequestBody LoginDTO dto) throws Exception {
-        errorManager(dto.getUsername(), "아이디를 입력해주세요.");
-        errorManager(dto.getPassword(), "비밀번호를 입력해주세요.");
-
-        LoginUser loginUser = loginService.findByUserName(dto.getUsername());
-
-        if (loginUser == null || !encoder.matches(dto.getPassword(), loginUser.getPassword())) {
-            errorManager("", "아이디 또는 비밀번호를 확인 해주세요.");
-        }
-        return loginService.login(dto.getUsername(), dto.getPassword());
+    public String logIn(@RequestBody LoginDTO dto){
+        dtoIsNotEmpty(dto);
+        return loginService.logIn(dto.getUsername(), dto.getPassword());
     }
 }
