@@ -1,14 +1,11 @@
 package com.example.cocktail.Commnity.Board.service;
 
 import com.example.cocktail.Commnity.Board.dto.BoardDTO;
-import com.example.cocktail.Commnity.Board.model.Board;
 import com.example.cocktail.Commnity.Board.repository.BoardRepository;
-import com.example.cocktail.Commnity.Comment.dto.CommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GetBoardService {
@@ -16,23 +13,20 @@ public class GetBoardService {
     private BoardRepository boardRepository;
     @Autowired
     private BoardService boardService;
-    private BoardDTO convertToDTO(Board board) {
-        List<CommentDTO> commentDTOs = board.getComments().stream()
-                .map(comment -> new CommentDTO(
-                        comment.getId(),
-                        comment.getUser().getNickname(), // 여기에서 User 객체의 nickname을 가져옴
-                        comment.getContent(),
-                        comment.getCreatedAt()))
-                .collect(Collectors.toList());
 
-        return new BoardDTO(board.getId(), board.getAuthor(), board.getTitle(),
-                board.getContent(), board.getCreatedAt(), commentDTOs);
-    }
     public List<BoardDTO> getAllBoards() {
-        return boardRepository.findAll().stream()
-                .map(this::convertToDTO).collect(Collectors.toList());
+        return boardService.convertToDTOList(boardRepository.findAll());
     }
     public BoardDTO getBoardById(Long id) {
-        return convertToDTO(boardService.findBoardById(id));
+        return boardService.convertToDTO(boardService.findBoardById(id));
+    }
+    public List<BoardDTO> searchByAuthor(String author) {
+        return boardService.convertToDTOList(boardRepository.findByAuthorContaining(author));
+    }
+    public List<BoardDTO> searchByTitle(String title) {
+        return boardService.convertToDTOList(boardRepository.findByTitleContaining(title));
+    }
+    public List<BoardDTO> searchByContent(String content) {
+        return boardService.convertToDTOList(boardRepository.findByContentContaining(content));
     }
 }

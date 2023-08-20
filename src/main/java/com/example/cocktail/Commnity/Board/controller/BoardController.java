@@ -1,7 +1,7 @@
 package com.example.cocktail.Commnity.Board.controller;
 
 import com.example.cocktail.Commnity.Board.dto.BoardDTO;
-import com.example.cocktail.Commnity.Board.exception.BoardExceptionHandler;
+import com.example.cocktail.Commnity.Board.exception.BoardException;
 import com.example.cocktail.Commnity.Board.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,7 +24,8 @@ public class BoardController {
     @Autowired
     private PutBoardService putBoardService;
     @Autowired
-    private BoardExceptionHandler boardExceptionHandler;
+    private BoardException boardException;
+
     public void checkAuthentication(Authentication authentication) {
         if(authentication == null ||
                 !boardService.checkUser(authentication.getName())){
@@ -40,7 +41,7 @@ public class BoardController {
     public boolean createBoard(@RequestBody BoardDTO boardDTO,
                                Authentication authentication) {
         checkAuthentication(authentication);
-        boardExceptionHandler.contentAndTitleNotEmpty(boardDTO.getTitle(), boardDTO.getContent());
+        boardException.contentAndTitleNotEmpty(boardDTO.getTitle(), boardDTO.getContent());
 
         return postBoardService.createBoard(authentication.getName(), boardDTO.getTitle(), boardDTO.getContent());
     }
@@ -49,7 +50,7 @@ public class BoardController {
                                @RequestBody BoardDTO boardDTO,
                                Authentication authentication) {
         checkAuthentication(authentication);
-        boardExceptionHandler.contentAndTitleNotEmpty(boardDTO.getTitle(), boardDTO.getContent());
+        boardException.contentAndTitleNotEmpty(boardDTO.getTitle(), boardDTO.getContent());
 
         return putBoardService.updateBoard(id, authentication.getName(), boardDTO.getTitle(), boardDTO.getContent());
     }
@@ -58,4 +59,14 @@ public class BoardController {
         checkAuthentication(authentication);
         return deleteBoardService.deleteBoard(id, authentication.getName());
     }
+    @GetMapping("/search")
+    public List<BoardDTO> searchBoards(@RequestParam(required = false) String author,
+                                       @RequestParam(required = false) String title,
+                                       @RequestParam(required = false) String content) {
+        if (author != null){ return getBoardService.searchByAuthor(author); }
+        if (title != null){ return getBoardService.searchByTitle(title); }
+        if (content != null){ return getBoardService.searchByContent(content); }
+        else {return getAllBoards();}
+    }
 }
+

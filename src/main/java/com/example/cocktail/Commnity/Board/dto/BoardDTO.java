@@ -13,7 +13,6 @@ public class BoardDTO {
     private String title;
     private String content;
     private LocalDateTime createdAt;
-
     private List<CommentDTO> comments;
 
     public BoardDTO(Long id, String author, String title, String content, LocalDateTime createdAt, List<CommentDTO> comments) {

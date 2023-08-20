@@ -2,7 +2,7 @@ package com.example.cocktail.Commnity.Comment.controller;
 
 import com.example.cocktail.Commnity.Board.controller.BoardController;
 import com.example.cocktail.Commnity.Comment.dto.CommentDTO;
-import com.example.cocktail.Commnity.Comment.exception.CommentExceptionHandler;
+import com.example.cocktail.Commnity.Comment.exception.CommentException;
 import com.example.cocktail.Commnity.Comment.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,7 +14,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
     @Autowired
-    private CommentExceptionHandler commentExceptionHandler;
+    private CommentException commentException;
     @Autowired
     BoardController boardController;
 
@@ -23,7 +23,7 @@ public class CommentController {
                                  @RequestBody CommentDTO commentDTO,
                                  Authentication authentication ) {
         boardController.checkAuthentication(authentication);
-        commentExceptionHandler.commentNotEmpty(commentDTO.getContent());
+        commentException.commentNotEmpty(commentDTO.getContent());
 
         return commentService.createComment(boardId, authentication.getName(), commentDTO.getContent());
     }
@@ -33,7 +33,7 @@ public class CommentController {
                                  @RequestBody CommentDTO commentDTO,
                                  Authentication authentication) {
         boardController.checkAuthentication(authentication);
-        commentExceptionHandler.commentNotEmpty(commentDTO.getContent());
+        commentException.commentNotEmpty(commentDTO.getContent());
 
         return commentService.updateComment(boardId, commentId, authentication.getName(), commentDTO.getContent());
     }

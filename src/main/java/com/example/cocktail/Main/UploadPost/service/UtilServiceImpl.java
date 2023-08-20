@@ -1,4 +1,4 @@
-package com.example.cocktail.Home.UploadPost.service;
+package com.example.cocktail.Main.UploadPost.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,14 +60,14 @@ public class UtilServiceImpl implements UtilService {
     }
 
     @Override
-    public List<MultipartFile> removeDuplicate(MultipartFile[] pictureData) {
-        return List.of(pictureData).stream()
+    public List<MultipartFile> removeDuplicatePictureData(List<MultipartFile> pictureData) {
+        return pictureData.stream()
                 .distinct()
                 .collect(Collectors.toList());
     }
     @Override
-    public List<String> removeDuplicate(String[] textData) {
-        return Arrays.stream(textData)
+    public List<String> removeDuplicateTextData(List<String> textData) {
+        return textData.stream()
                 .distinct()
                 .collect(Collectors.toList());
     }
