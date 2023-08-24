@@ -2,25 +2,30 @@ package com.example.cocktail.Main.UploadPost.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "testingredient")
+@Table(name = "ingredient")
 public class Ingredient {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inum")
-    private int inum;
+    private Long inum;
 
-    @Column(name = "ingredient")
-    private String ingredient;
+    @Column(name = "kingre")
+    private String kingre;
 
-    @Column(name = "engingre")
-    private String engingre;
+    @Column(name = "eingre")
+    private String eingre;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "ingredient_korean")
+    private String ingredientKorean;
+
+    @Column(name = "ingredient_english")
+    private String ingredientEnglish;
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<Pair> pairs;
 }

@@ -19,16 +19,16 @@ public class JoinController {
         if (joinDTO.getNickname().isEmpty()) { throw new IllegalArgumentException("닉네임을 입력해주세요."); }
         if (!checkUserid(joinDTO.getUsername())) { throw new IllegalArgumentException("중복된 아이디입니다."); }
         if (!checkNickname(joinDTO.getNickname())) { throw new IllegalArgumentException("중복된 닉네임입니다."); }
-        if (!joinDTO.getPassword().equals(joinDTO.getCheckPassword())) {
-            throw new IllegalArgumentException("비밀번호 확인이 일치 하지 않습니다.");
-        }
+//        if (!joinDTO.getPassword().equals(joinDTO.getCheckPassword())) {
+//            throw new IllegalArgumentException("비밀번호 확인이 일치 하지 않습니다.");
+//        }
     }
     @PostMapping
     public boolean signUp(@RequestBody JoinDTO joinDTO) {
         checkDTO(joinDTO);
         return joinService.signUp(joinDTO);
     }
-    @PostMapping("/check-userid")
+    @PostMapping("/check-username")
     public boolean checkUserid(@RequestParam String username) {
         emptyManager(username, "아이디를 입력 해주세요.");
         return joinService.isIdUnique(username);

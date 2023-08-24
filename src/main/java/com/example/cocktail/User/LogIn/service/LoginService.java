@@ -23,7 +23,7 @@ public class LoginService {
         if (loginUser == null || loginUser.getUsername() == null) {
             throw new UsernameNotFoundException("일치 하는 아이디가 없습니다.");
         }
-        if (!encoder.matches(loginUser.getPassword(), password)) {
+        if (!encoder.matches(password, loginUser.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치 하지 않습니다.");
         }
         return true;

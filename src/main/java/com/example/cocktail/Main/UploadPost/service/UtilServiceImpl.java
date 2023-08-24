@@ -1,5 +1,14 @@
 package com.example.cocktail.Main.UploadPost.service;
 
+import com.example.cocktail.Main.UploadPost.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.UploadPost.model.Images;
+import com.example.cocktail.Main.UploadPost.model.Ingredient;
+import com.example.cocktail.Main.UploadPost.model.Pair;
+import com.example.cocktail.Main.UploadPost.model.Recipe;
+import com.example.cocktail.Main.UploadPost.repository.ImagesRepository;
+import com.example.cocktail.Main.UploadPost.repository.IngredientRepository;
+import com.example.cocktail.Main.UploadPost.repository.PairRepository;
+import com.example.cocktail.Main.UploadPost.repository.RecipeRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -10,6 +19,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +31,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class UtilServiceImpl implements UtilService {
+    @Autowired
+    private IngredientRepository ingredientRepository;
+    @Autowired
+    private PairRepository pairRepository;
+    @Autowired
+    private RecipeRepository recipeRepository;
+    @Autowired
+    private ImagesRepository imagesRepository;
     @Value("${flask.server}")
     private String flaskServer;
     @Override
@@ -70,5 +88,50 @@ public class UtilServiceImpl implements UtilService {
         return textData.stream()
                 .distinct()
                 .collect(Collectors.toList());
+    }
+    @Override
+    public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
+        Map<Long, Recipe> recipeMap = ingredientsList.stream()
+                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream())
+                .map(Ingredient::getInum)
+                .flatMap(inum -> pairRepository.findByInum(inum).stream())
+                .map(Pair::getCnum)
+                .distinct()
+                .collect(Collectors.toMap(
+                        cnum -> cnum,
+                        cnum -> recipeRepository.findById(cnum).orElse(null)
+                ));
+
+        return setRecipesConvertDTOWithImages(recipeMap);
+    }
+    @Override
+    public List<String> getInfo(List<String> ingredientsList) {
+        return ingredientsList.stream()
+                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream())
+                .map(Ingredient::getKingre)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<RecipeResponseDTO> setRecipesConvertDTOWithImages(Map<Long, Recipe> recipeMap) {
+        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+
+        for (Recipe recipe : recipeMap.values()) {
+            RecipeResponseDTO responseDTO = new RecipeResponseDTO();
+            responseDTO.setCnum(recipe.getCnum());
+            responseDTO.setName(recipe.getName());
+            responseDTO.setIngredients(recipe.getIngredients());
+            responseDTO.setCocktailMethod(recipe.getCocktailMethod());
+            responseDTO.setGarnish(recipe.getGarnish());
+
+            Images image = imagesRepository.findByCnum(recipe.getCnum());
+            if (image != null) {
+                responseDTO.setImage(image.getPicture());
+            }
+
+            responseDTOs.add(responseDTO);
+        }
+
+        return responseDTOs;
     }
 }

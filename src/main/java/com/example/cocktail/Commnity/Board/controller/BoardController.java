@@ -6,6 +6,7 @@ import com.example.cocktail.Commnity.Board.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,6 @@ public class BoardController {
     private PutBoardService putBoardService;
     @Autowired
     private BoardException boardException;
-
     public void checkAuthentication(Authentication authentication) {
         if(authentication == null ||
                 !boardService.checkUser(authentication.getName())){
@@ -66,7 +66,6 @@ public class BoardController {
         if (author != null){ return getBoardService.searchByAuthor(author); }
         if (title != null){ return getBoardService.searchByTitle(title); }
         if (content != null){ return getBoardService.searchByContent(content); }
-        else {return getAllBoards();}
+        else { return getAllBoards(); }
     }
 }
-

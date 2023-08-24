@@ -36,13 +36,6 @@ public class SecurityConfig {
                 .antMatchers("/board", "/board/{id}", "/board/search").permitAll() // /board, board/{id}는 모두 접근 가능
                 .anyRequest().permitAll() // 그 외의 요청은 모두 허용
                 .and()
-            .formLogin()
-                .loginPage("/login").permitAll()
-                .and()
-            .logout()
-                .logoutUrl("/logout").permitAll()
-                .logoutSuccessUrl("/")
-                .and()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT사용하는 경우 씀
                 .and()
