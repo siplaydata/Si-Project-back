@@ -89,10 +89,69 @@ public class UtilServiceImpl implements UtilService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+//    @Override
+//    public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
+//        Map<Long, Recipe> recipeMap = ingredientsList.stream()
+//                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream())
+//                .map(Ingredient::getInum)
+//                .flatMap(inum -> pairRepository.findByInum(inum).stream())
+//                .map(Pair::getCnum)
+//                .distinct()
+//                .collect(Collectors.toMap(
+//                        cnum -> cnum,
+//                        cnum -> recipeRepository.findById(cnum).orElse(null)
+//                ));
+//
+//        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+//
+//        for (Recipe recipe : recipeMap.values()) {
+//            List<String> matchedIngredientEnglishList = recipe.getPairs().stream()
+//                    .map(pair -> pair.getIngredient().getIngredientEnglish())
+//                    .filter(ingredientsList::contains)
+//                    .distinct()
+//                    .collect(Collectors.toList());
+//
+//            RecipeResponseDTO responseDTO = new RecipeResponseDTO();
+//            responseDTO.setKingre(recipe.getPairs().stream()
+//                    .map(pair -> pair.getIngredient().getKingre())
+//                    .distinct()
+//                    .collect(Collectors.toList()));
+//
+//            responseDTO.setInputData(matchedIngredientEnglishList);
+//
+//            // Find the ingredientEnglish values that matched the inputData and set them
+//            List<String> inputDataMatchedValues = ingredientsList.stream()
+//                    .filter(matchedIngredientEnglishList::contains)
+//                    .collect(Collectors.toList());
+//            responseDTO.setInputData(inputDataMatchedValues);
+//
+//            responseDTO.setName(recipe.getName());
+//            responseDTO.setIngredients(recipe.getIngredients());
+//            responseDTO.setCocktailMethod(recipe.getCocktailMethod());
+//            responseDTO.setGarnish(recipe.getGarnish());
+//
+//            Images image = imagesRepository.findByCnum(recipe.getCnum());
+//            if (image != null) {
+//                responseDTO.setImage(image.getPicture());
+//            }
+//
+//            responseDTOs.add(responseDTO);
+//        }
+//
+//        return responseDTOs;
+//    }
+
     @Override
     public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
+        Map<Long, List<String>> ingredientToIngredientsListMap = new HashMap<>();
         Map<Long, Recipe> recipeMap = ingredientsList.stream()
-                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream())
+                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream()
+                        .peek(foundIngredient -> {
+                            Long inum = foundIngredient.getInum();
+                            List<String> inputIngredientsList = ingredientToIngredientsListMap.getOrDefault(inum, new ArrayList<>());
+                            inputIngredientsList.add(ingredient);
+                            ingredientToIngredientsListMap.put(inum, inputIngredientsList);
+                        }))
                 .map(Ingredient::getInum)
                 .flatMap(inum -> pairRepository.findByInum(inum).stream())
                 .map(Pair::getCnum)
@@ -102,23 +161,24 @@ public class UtilServiceImpl implements UtilService {
                         cnum -> recipeRepository.findById(cnum).orElse(null)
                 ));
 
-        return setRecipesConvertDTOWithImages(recipeMap);
-    }
-    @Override
-    public List<String> getInfo(List<String> ingredientsList) {
-        return ingredientsList.stream()
-                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream())
-                .map(Ingredient::getKingre)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    public List<RecipeResponseDTO> setRecipesConvertDTOWithImages(Map<Long, Recipe> recipeMap) {
         List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
 
         for (Recipe recipe : recipeMap.values()) {
+//            List<String> matchedIngredientEnglishList = recipe.getPairs().stream()
+//                    .map(pair -> pair.getIngredient().getIngredientEnglish())
+//                    .filter(ingredientsList::contains)
+//                    .distinct()
+//                    .collect(Collectors.toList());
+
             RecipeResponseDTO responseDTO = new RecipeResponseDTO();
-            responseDTO.setCnum(recipe.getCnum());
+            responseDTO.setIngredientType(String.join(", ", recipe.getPairs().stream()
+                    .map(pair -> pair.getIngredient().getKingre())
+                    .distinct()
+                    .collect(Collectors.toList())));
+
+            // Get the input values used for this recipe and set them in inputData
+            List<String> inputValues = ingredientToIngredientsListMap.get(recipe.getPairs().get(0).getInum());
+            responseDTO.setUserInputData(String.join(", ", inputValues));
             responseDTO.setName(recipe.getName());
             responseDTO.setIngredients(recipe.getIngredients());
             responseDTO.setCocktailMethod(recipe.getCocktailMethod());

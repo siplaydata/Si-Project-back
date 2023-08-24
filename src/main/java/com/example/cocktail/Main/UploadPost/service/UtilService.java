@@ -12,6 +12,5 @@ public interface UtilService {
 
     List<String> removeDuplicateTextData(List<String> textData);
 
-    List<RecipeResponseDTO> getRecipes(List<String> enames);
-    List<String> getInfo(List<String> ingredientsList);
+    List<RecipeResponseDTO> getRecipes(List<String> ingredientsList);
 }
