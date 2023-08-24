@@ -20,7 +20,7 @@ public class UploadController {
     @Autowired
     private UtilService utilService;
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final int MAX_NUMBER_OF_PICTURE = 10;
+    private static final int MAX_NUMBER_OF_PICTURE = 3;
     private void validateTextAndPictureData(List<String> textData, List<MultipartFile> pictureData) {
         if ((textData == null || textData.isEmpty()) && (pictureData == null || pictureData.isEmpty())) {
             throw new IllegalArgumentException("사진 또는 텍스트 중 하나 이상을 입력하세요.");
@@ -52,34 +52,6 @@ public class UploadController {
                                        @RequestParam(value = "pictureData", required = false) List<MultipartFile> pictureData
     ) {
         validateTextAndPictureData(textData, pictureData);
-
-        long startTime = System.nanoTime(); // 현재 시간 기록
-
-        List<RecipeResponseDTO> results = uploadService.handleUploadProcess(textData, pictureData);
-
-        long endTime = System.nanoTime(); // 현재 시간 기록
-        long elapsedTimeNano = endTime - startTime; // 실행 시간 계산
-        double elapsedTimeSeconds = (double) elapsedTimeNano / 1_000_000_000; // 나노초를 초로 변환
-        System.out.println("-------------------- " + "Loading Time : " + elapsedTimeSeconds + " --------------------");
-        System.out.println("-------------------- " + "Result Size : " + results.size() + " --------------------");
-        return results;
-    }
-    @PostMapping("/test")
-    public List<String> test(@RequestParam(value = "textData", required = false) List<String> textData,
-                             @RequestParam(value = "pictureData", required = false) List<MultipartFile> pictureData
-    ) {
-        validateTextAndPictureData(textData, pictureData);
-
-        long startTime = System.nanoTime(); // 현재 시간 기록
-
-        List<String> results = utilService.getInfo(textData);
-
-        long endTime = System.nanoTime(); // 현재 시간 기록
-        long elapsedTimeNano = endTime - startTime; // 실행 시간 계산
-        double elapsedTimeSeconds = (double) elapsedTimeNano / 1_000_000_000; // 나노초를 초로 변환
-        System.out.println("-------------------- " + "Loading Time : " + elapsedTimeSeconds + " --------------------");
-        System.out.println("-------------------- " + "Result Size : " + results.size() + " --------------------");
-
-        return results;
+        return uploadService.handleUploadProcess(textData, pictureData);
     }
 }
