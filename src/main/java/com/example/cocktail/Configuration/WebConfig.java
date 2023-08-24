@@ -19,16 +19,6 @@ import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        // 허용할 오리진 주소를 지정합니다.
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:3000", "http://localhost:5000") // 허용할 오리진 주소를 지정합니다.
-//                .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드 지정
-//                .allowedHeaders("*") // 허용할 HTTP 헤더 지정
-//                .allowCredentials(true); // 인증 정보를 허용할지 여부 (e.g., 쿠키)
-//    }
-
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         for (HttpMessageConverter<?> converter : converters) {

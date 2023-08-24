@@ -8,4 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/logout")
 public class LogOutController {
+    @PostMapping
+    public String logout(){
+        return "로그아웃 페이지";
+    }
 }

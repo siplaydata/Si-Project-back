@@ -13,9 +13,10 @@ public class BoardDTO {
     private String title;
     private String content;
     private LocalDateTime createdAt;
-
     private List<CommentDTO> comments;
 
+    private int totalLikes;
+    private int totalDislikes;
     public BoardDTO(Long id, String author, String title, String content, LocalDateTime createdAt, List<CommentDTO> comments) {
         this.id = id;
         this.author = author;

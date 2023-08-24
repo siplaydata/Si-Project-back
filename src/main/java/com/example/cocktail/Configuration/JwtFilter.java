@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authorization : {}", authorization);
 
-        if (authorization == null || !authorization.startsWith("qwerty ")) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
             log.error("권한이 없습니다.");
             filterChain.doFilter(request, response);
             return;
@@ -40,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (JwtUtil.isExpired(token, secretKey)) {
             log.error("다시 로그인 해주세요.");
             filterChain.doFilter(request, response);
+
             return;
         }
 

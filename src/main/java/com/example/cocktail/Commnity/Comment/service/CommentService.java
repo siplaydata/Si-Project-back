@@ -1,7 +1,7 @@
 package com.example.cocktail.Commnity.Comment.service;
 
 import com.example.cocktail.Commnity.Board.service.BoardService;
-import com.example.cocktail.Commnity.Comment.exception.CommentExceptionHandler;
+import com.example.cocktail.Commnity.Comment.exception.CommentException;
 import com.example.cocktail.Commnity.Comment.model.Comment;
 import com.example.cocktail.Commnity.Comment.repository.CommentRepository;
 import com.example.cocktail.Commnity.Userinfo.model.User;
@@ -18,7 +18,7 @@ public class CommentService {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private CommentExceptionHandler commentExceptionHandler;
+    private CommentException commentException;
     public boolean createComment(Long boardId, String nickname, String content) {
         Comment comment = new Comment();
         comment.setBoard(boardService.findBoardById(boardId));
@@ -29,7 +29,7 @@ public class CommentService {
             commentRepository.save(comment);
             return true;
         } catch (Exception e) {
-            commentExceptionHandler.failByError("댓글 작성", e.getMessage());
+            commentException.throwRuntimeException("댓글 작성", e.getMessage());
             return false;
         }
     }
@@ -39,7 +39,7 @@ public class CommentService {
         Comment comment = commentRepository.findByIdAndUser(commentId, user);
 
         if (comment == null || !comment.getBoard().getId().equals(boardId)) {
-            throw new IllegalArgumentException("본인 외에는 할 수 없습니다.");
+            commentException.throwIllegalArgumentException("본인 외에는 할 수 없습니다.");
         }
         return comment;
     }
@@ -50,7 +50,7 @@ public class CommentService {
             commentRepository.save(comment);
             return true;
         } catch (Exception e){
-            commentExceptionHandler.failByError("댓글 수정", e.getMessage());
+            commentException.throwRuntimeException("댓글 수정", e.getMessage());
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class CommentService {
             commentRepository.delete(comment);
             return true;
         } catch (Exception e) {
-            commentExceptionHandler.failByError("댓글 삭제", e.getMessage());
+            commentException.throwRuntimeException("댓글 삭제", e.getMessage());
             return false;
         }
     }

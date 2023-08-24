@@ -1,6 +1,6 @@
 package com.example.cocktail.Commnity.Board.service;
 
-import com.example.cocktail.Commnity.Board.exception.BoardExceptionHandler;
+import com.example.cocktail.Commnity.Board.exception.BoardException;
 import com.example.cocktail.Commnity.Board.model.Board;
 import com.example.cocktail.Commnity.Board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +13,13 @@ public class PutBoardService {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private BoardExceptionHandler boardExceptionHandler;
+    private BoardException boardException;
     public boolean updateBoard(Long id, String nickname, String title, String content) {
         Board board = boardService.findBoardById(id);
         boardService.checkAuthorizationByUser(board.getAuthor(), nickname);
 
         if (board.getTitle().equals(title) && board.getContent().equals(content)){
-            throw new IllegalArgumentException("수정된 내용이 없습니다.");
+            boardException.throwIllegalArgumentException("수정된 내용이 없습니다.");
         } else {
             try {
                 board.setTitle(title);
@@ -27,9 +27,10 @@ public class PutBoardService {
                 boardRepository.save(board);
                 return true;
             } catch (Exception e) {
-                boardExceptionHandler.failByError("수정", e.getMessage());
+                boardException.throwRuntimeException("수정", e.getMessage());
                 return false;
             }
         }
+        return false;
     }
 }
