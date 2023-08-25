@@ -1,7 +1,8 @@
-package com.example.cocktail.Main.GetList.TextChoice.controller;
+package com.example.cocktail.Main.TextChoice.controller;
 
-import com.example.cocktail.Main.GetList.TextChoice.dto.TextChoiceDTO;
-import com.example.cocktail.Main.GetList.TextChoice.service.TextChoiceService;
+import com.example.cocktail.Main.TextChoice.dto.TextChoiceDTO;
+import com.example.cocktail.Main.TextChoice.service.TextChoiceService;
+import com.example.cocktail.Main.TextChoice.service.TextChoiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

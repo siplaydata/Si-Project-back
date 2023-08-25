@@ -1,10 +1,8 @@
-package com.example.cocktail.Main.UploadPost.controller;
+package com.example.cocktail.Main.Upload.controller;
 
-import com.example.cocktail.Main.UploadPost.dto.RecipeResponseDTO;
-import com.example.cocktail.Main.UploadPost.model.Ingredient;
-import com.example.cocktail.Main.UploadPost.model.Recipe;
-import com.example.cocktail.Main.UploadPost.service.UploadService;
-import com.example.cocktail.Main.UploadPost.service.UtilService;
+import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.Upload.service.UploadService;
+import com.example.cocktail.Main.Upload.service.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

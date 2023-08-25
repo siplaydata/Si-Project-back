@@ -1,2 +1,8 @@
-package com.example.cocktail.CocktailSearch.dto;public class CocktailDTO {
+package com.example.cocktail.CocktailSearch.dto;
+
+import lombok.Data;
+
+@Data
+public class SearchDTO {
+    private int id;
 }

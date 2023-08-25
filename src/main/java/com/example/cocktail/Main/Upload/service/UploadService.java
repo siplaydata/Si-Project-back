@@ -1,19 +1,14 @@
-package com.example.cocktail.Main.UploadPost.service;
+package com.example.cocktail.Main.Upload.service;
 
-import com.example.cocktail.Main.UploadPost.dto.RecipeResponseDTO;
-import com.example.cocktail.Main.UploadPost.model.Ingredient;
-import com.example.cocktail.Main.UploadPost.model.Pair;
-import com.example.cocktail.Main.UploadPost.model.Recipe;
-import com.example.cocktail.Main.UploadPost.repository.IngredientRepository;
-import com.example.cocktail.Main.UploadPost.repository.PairRepository;
-import com.example.cocktail.Main.UploadPost.repository.RecipeRepository;
-import org.hibernate.Hibernate;
+import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.Upload.repository.IngredientRepository;
+import com.example.cocktail.Main.Upload.repository.PairRepository;
+import com.example.cocktail.Main.Upload.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UploadService {
@@ -37,16 +32,16 @@ public class UploadService {
     }
 
     private List<RecipeResponseDTO> onlyTextData(List<String> textData) {
-        List<String> uniqueTextData = utilService.removeDuplicateTextData(textData);
-        return  utilService.getRecipes(uniqueTextData);
+        List<String> setIngredientList = utilService.removeDuplicateTextData(textData);
+        return  utilService.getRecipes(setIngredientList);
     }
 
     private List<RecipeResponseDTO> onlyPictureData(List<MultipartFile> pictureData) {
         List<MultipartFile> uniquePictureData = utilService.removeDuplicatePictureData(pictureData);
         List<String> responseData = utilService.sendToFlaskServer(uniquePictureData);
-        List<String> uniqueResponseData = utilService.removeDuplicateTextData(responseData);
+        List<String> setIngredientList = utilService.removeDuplicateTextData(responseData);
 
-        return utilService.getRecipes(uniqueResponseData);
+        return utilService.getRecipes(setIngredientList);
     }
 
     public List<RecipeResponseDTO> handleUploadProcess(List<String> textData, List<MultipartFile> pictureData) {

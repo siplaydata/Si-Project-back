@@ -1,9 +1,12 @@
-package com.example.cocktail.Main.GetList.TextChoice.dto;
+package com.example.cocktail.Main.TextChoice.dto;
 
 import lombok.Data;
 
 @Data
 public class TextChoiceDTO {
-    private String ingredientType;
+    private String ingredientKorean;
     private String ingredientEnglish;
+
+    private String alcoholKorean;
+    private String alcoholEnglish;
 }

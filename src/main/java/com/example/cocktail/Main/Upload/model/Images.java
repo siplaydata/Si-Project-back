@@ -1,13 +1,12 @@
-package com.example.cocktail.Main.UploadPost.model;
+package com.example.cocktail.Main.Upload.model;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.IdentityHashMap;
 
 @Data
 @Entity
-@Table(name = "images")
+@Table(name = "testimages")
 public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

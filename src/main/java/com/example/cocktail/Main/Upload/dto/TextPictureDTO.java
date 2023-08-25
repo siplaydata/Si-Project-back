@@ -1,4 +1,4 @@
-package com.example.cocktail.Main.UploadPost.dto;
+package com.example.cocktail.Main.Upload.dto;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

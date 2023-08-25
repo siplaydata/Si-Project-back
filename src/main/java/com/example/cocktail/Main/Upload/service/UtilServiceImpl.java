@@ -1,14 +1,14 @@
-package com.example.cocktail.Main.UploadPost.service;
+package com.example.cocktail.Main.Upload.service;
 
-import com.example.cocktail.Main.UploadPost.dto.RecipeResponseDTO;
-import com.example.cocktail.Main.UploadPost.model.Images;
-import com.example.cocktail.Main.UploadPost.model.Ingredient;
-import com.example.cocktail.Main.UploadPost.model.Pair;
-import com.example.cocktail.Main.UploadPost.model.Recipe;
-import com.example.cocktail.Main.UploadPost.repository.ImagesRepository;
-import com.example.cocktail.Main.UploadPost.repository.IngredientRepository;
-import com.example.cocktail.Main.UploadPost.repository.PairRepository;
-import com.example.cocktail.Main.UploadPost.repository.RecipeRepository;
+import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.Upload.model.Images;
+import com.example.cocktail.Main.Upload.model.Ingredient;
+import com.example.cocktail.Main.Upload.model.Pair;
+import com.example.cocktail.Main.Upload.model.Recipe;
+import com.example.cocktail.Main.Upload.repository.ImagesRepository;
+import com.example.cocktail.Main.Upload.repository.IngredientRepository;
+import com.example.cocktail.Main.Upload.repository.PairRepository;
+import com.example.cocktail.Main.Upload.repository.RecipeRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -89,16 +89,71 @@ public class UtilServiceImpl implements UtilService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+//    @Override
+//    public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
+//        Map<Long, List<String>> ingredientToIngredientsListMap = new HashMap<>();
+//        Map<Long, Recipe> recipeMap = ingredientsList.stream()
+//                .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream()
+//                        .peek(foundIngredient -> {
+//                            Long inum = foundIngredient.getInum();
+//                            List<String> inputIngredientsList = ingredientToIngredientsListMap.getOrDefault(inum, new ArrayList<>());
+//                            inputIngredientsList.add(ingredient);
+//                            ingredientToIngredientsListMap.put(inum, inputIngredientsList);
+//                        }))
+//                .map(Ingredient::getInum)
+//                .flatMap(inum -> pairRepository.findByInum(inum).stream())
+//                .map(Pair::getCnum)
+//                .distinct()
+//                .collect(Collectors.toMap(
+//                        cnum -> cnum,
+//                        cnum -> recipeRepository.findById(cnum).orElse(null)
+//                ));
+//
+//        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+//
+//        for (Recipe recipe : recipeMap.values()) {
+//            RecipeResponseDTO responseDTO = new RecipeResponseDTO();
+//            responseDTO.setIngredientType(recipe.getPairs().stream()
+//                    .map(pair -> pair.getIngredient().getKingre())
+//                    .distinct()
+//                    .collect(Collectors.joining(", ")));
+//
+//            List<String> inputValues = ingredientToIngredientsListMap.get(recipe.getPairs().get(0).getInum());
+//
+//            responseDTO.setUserInputData(String.join(", ", inputValues));
+//            responseDTO.setName(recipe.getName());
+//            responseDTO.setIngredients(recipe.getIngredients());
+//            responseDTO.setCocktailMethod(recipe.getCocktailMethod());
+//            responseDTO.setGarnish(recipe.getGarnish());
+//
+//            Images image = imagesRepository.findByCnum(recipe.getCnum());
+//            if (image != null) { responseDTO.setImage(image.getPicture()); }
+//            responseDTOs.add(responseDTO);
+//        }
+//        return responseDTOs;
+//    }
     @Override
     public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
         Map<Long, List<String>> ingredientToIngredientsListMap = new HashMap<>();
-        Map<Long, Recipe> recipeMap = ingredientsList.stream()
+        Map<Long, Recipe> recipeMap = buildRecipeMap(ingredientsList, ingredientToIngredientsListMap);
+
+        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+        for (Recipe recipe : recipeMap.values()) {
+            RecipeResponseDTO responseDTO = createRecipeResponseDTO(recipe, ingredientToIngredientsListMap);
+            responseDTOs.add(responseDTO);
+        }
+        System.out.println("------------ responseDTOs size : " + responseDTOs.size() + " ------------");
+        return responseDTOs;
+    }
+
+    private Map<Long, Recipe> buildRecipeMap(List<String> ingredientsList, Map<Long, List<String>> ingredientToIngredientsListMap) {
+        return ingredientsList.stream()
                 .flatMap(ingredient -> ingredientRepository.findByIngredientEnglishContainingIgnoreCase(ingredient).stream()
                         .peek(foundIngredient -> {
                             Long inum = foundIngredient.getInum();
-                            List<String> inputIngredientsList = ingredientToIngredientsListMap.getOrDefault(inum, new ArrayList<>());
-                            inputIngredientsList.add(ingredient);
-                            ingredientToIngredientsListMap.put(inum, inputIngredientsList);
+                            ingredientToIngredientsListMap
+                                    .computeIfAbsent(inum, key -> new ArrayList<>())
+                                    .add(ingredient);
                         }))
                 .map(Ingredient::getInum)
                 .flatMap(inum -> pairRepository.findByInum(inum).stream())
@@ -108,30 +163,28 @@ public class UtilServiceImpl implements UtilService {
                         cnum -> cnum,
                         cnum -> recipeRepository.findById(cnum).orElse(null)
                 ));
+    }
 
-        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+    private RecipeResponseDTO createRecipeResponseDTO(Recipe recipe, Map<Long, List<String>> ingredientToIngredientsListMap) {
+        RecipeResponseDTO responseDTO = new RecipeResponseDTO();
 
-        for (Recipe recipe : recipeMap.values()) {
-            RecipeResponseDTO responseDTO = new RecipeResponseDTO();
-            responseDTO.setIngredientType(recipe.getPairs().stream()
-                    .map(pair -> pair.getIngredient().getKingre())
-                    .distinct()
-                    .collect(Collectors.joining(", ")));
+        List<String> inputValues = ingredientToIngredientsListMap.get(recipe.getPairs().get(0).getInum());
+        String ingredientType = recipe.getPairs().stream()
+                .map(pair -> pair.getIngredient().getKingre())
+                .distinct()
+                .collect(Collectors.joining(", "));
 
-            List<String> inputValues = ingredientToIngredientsListMap.get(recipe.getPairs().get(0).getInum());
-            responseDTO.setUserInputData(String.join(", ", inputValues));
+        responseDTO.setUserInputData(String.join(", ", inputValues));
+        responseDTO.setCocktailName(recipe.getName());
+        responseDTO.setIngredientType(ingredientType);
+        responseDTO.setIngredients(recipe.getIngredients());
+        responseDTO.setCocktailMethod(recipe.getCocktailMethod());
+        responseDTO.setGarnish(recipe.getGarnish());
 
-            responseDTO.setName(recipe.getName());
-            responseDTO.setIngredients(recipe.getIngredients());
-            responseDTO.setCocktailMethod(recipe.getCocktailMethod());
-            responseDTO.setGarnish(recipe.getGarnish());
-
-            Images image = imagesRepository.findByCnum(recipe.getCnum());
-            if (image != null) {
-                responseDTO.setImage(image.getPicture());
-            }
-            responseDTOs.add(responseDTO);
+        Images image = imagesRepository.findByCnum(recipe.getCnum());
+        if (image != null) {
+            responseDTO.setImage(image.getPicture());
         }
-        return responseDTOs;
+        return responseDTO;
     }
 }

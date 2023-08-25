@@ -1,4 +1,4 @@
-package com.example.cocktail.Main.UploadPost.model;
+package com.example.cocktail.Main.Upload.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "pair")
+@Table(name = "testpair")
 public class Pair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

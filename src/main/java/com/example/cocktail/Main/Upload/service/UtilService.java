@@ -1,6 +1,6 @@
-package com.example.cocktail.Main.UploadPost.service;
+package com.example.cocktail.Main.Upload.service;
 
-import com.example.cocktail.Main.UploadPost.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.cocktail.Main.GetList.TextChoice.model;
+package com.example.cocktail.Main.TextChoice.model;
 
 import lombok.Data;
 
@@ -10,18 +10,18 @@ import javax.persistence.*;
 public class TextChoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inum")
-    private Long id;
-
-    @Column(name = "kingre")
-    private String kingre;
-
-    @Column(name = "eingre")
-    private String eingre;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "ingredient_korean")
     private String ingredientKorean;
 
     @Column(name = "ingredient_english")
     private String ingredientEnglish;
+
+    @Column(name = "alcohol_korean")
+    private String alcoholKorean;
+
+    @Column(name = "alcohol_english")
+    private String alcoholEnglish;
 }

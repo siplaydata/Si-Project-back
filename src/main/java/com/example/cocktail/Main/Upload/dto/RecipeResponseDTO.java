@@ -1,15 +1,13 @@
-package com.example.cocktail.Main.UploadPost.dto;
+package com.example.cocktail.Main.Upload.dto;
 
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class RecipeResponseDTO {
     private String ingredientType;
     private String userInputData;
 
-    private String name;
+    private String cocktailName;
     private String ingredients;
     private String cocktailMethod;
     private String garnish;

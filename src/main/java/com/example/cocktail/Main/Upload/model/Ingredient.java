@@ -1,4 +1,4 @@
-package com.example.cocktail.Main.UploadPost.model;
+package com.example.cocktail.Main.Upload.model;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "ingredient")
+@Table(name = "testingredient")
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
