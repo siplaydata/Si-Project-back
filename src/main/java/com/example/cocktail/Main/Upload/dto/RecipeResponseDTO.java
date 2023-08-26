@@ -7,9 +7,11 @@ public class RecipeResponseDTO {
     private String ingredientType;
     private String userInputData;
 
-    private String cocktailName;
+    private String cocktailKorean;
+    private String cocktailEnglish;
     private String ingredients;
     private String cocktailMethod;
     private String garnish;
-    private byte[] image;
+
+    private String image;
 }

@@ -6,13 +6,17 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "testimages")
+@Table(name = "images")
 public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cnum")
-    private Long cnum;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "pic")
-    private byte[] picture;
+    @Column(name = "picture")
+    private String picture;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cocktail_id")
+    private Cocktail cocktail;
 }

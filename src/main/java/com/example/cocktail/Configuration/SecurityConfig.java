@@ -32,8 +32,8 @@ public class SecurityConfig {
                 .cors()
                 .and()
             .authorizeRequests()
-                .antMatchers("/board/**").authenticated() // /board 이후의 엔드포인트는 인증 필요
                 .antMatchers("/board", "/board/{id}", "/board/search").permitAll() // /board, board/{id}는 모두 접근 가능
+                .antMatchers("/board/**").authenticated() // /board 이후의 엔드포인트는 인증 필요
                 .anyRequest().permitAll() // 그 외의 요청은 모두 허용
                 .and()
             .sessionManagement()
@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:3000", "http://127.0.0.1:5000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:5000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("*"));

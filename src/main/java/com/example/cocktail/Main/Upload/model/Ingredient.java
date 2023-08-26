@@ -7,25 +7,25 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "testingredient")
+@Table(name = "ingredient")
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inum")
-    private Long inum;
-
-    @Column(name = "kingre")
-    private String kingre;
-
-    @Column(name = "eingre")
-    private String eingre;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "ingredient_korean")
-    private String ingredientKorean;
+    private String koreanIngredient;
 
     @Column(name = "ingredient_english")
-    private String ingredientEnglish;
+    private String englishIngredient;
+
+    @Column(name = "alcohol_korean")
+    private String koreanAlcohol;
+
+    @Column(name = "alcohol_english")
+    private String englishAlcohol;
 
     @OneToMany(mappedBy = "ingredient")
-    private List<Pair> pairs;
+    private List<RecipeIngredient> recipeIngredients;
 }

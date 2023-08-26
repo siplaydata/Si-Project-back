@@ -1,4 +1,4 @@
-package com.example.cocktail.CBTI.model;
+package com.example.cocktail.Main.Upload.model;
 
 import lombok.Data;
 
@@ -18,4 +18,5 @@ public class Cocktail {
 
     @Column(name = "name_english")
     private String englishName;
+
 }
