@@ -12,4 +12,7 @@ public class SearchImages {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @Column(name = "picture")
+    private String picture;
 }

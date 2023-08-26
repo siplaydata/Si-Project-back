@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CocktailNameRepository extends JpaRepository<SearchName, Integer> {
+public interface SearchNameRepository extends JpaRepository<SearchName, Integer> {
     List<SearchName> findByKoreanNameContainingOrEnglishNameContaining(String keyword, String keyword1);
 }

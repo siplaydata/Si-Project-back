@@ -15,8 +15,4 @@ public class Images {
 
     @Column(name = "picture")
     private String picture;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cocktail_id")
-    private Cocktail cocktail;
 }

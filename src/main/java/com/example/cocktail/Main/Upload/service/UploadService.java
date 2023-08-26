@@ -13,12 +13,6 @@ import java.util.*;
 @Service
 public class UploadService {
     @Autowired
-    private IngredientRepository ingredientRepository;
-    @Autowired
-    private RecipeIngredientRepository recipeIngredientRepository;
-    @Autowired
-    private RecipeRepository recipeRepository;
-    @Autowired
     private UtilService utilService;
 
     private List<RecipeResponseDTO> withTextPictureData(List<String> textData, List<MultipartFile> pictureData) {
@@ -28,11 +22,13 @@ public class UploadService {
         responseData.addAll(textData);
 
         List<String> uniqueResults = utilService.removeDuplicateTextData(responseData);
+
         return utilService.getRecipes(uniqueResults);
     }
 
     private List<RecipeResponseDTO> onlyTextData(List<String> textData) {
         List<String> setIngredientList = utilService.removeDuplicateTextData(textData);
+
         return  utilService.getRecipes(setIngredientList);
     }
 
