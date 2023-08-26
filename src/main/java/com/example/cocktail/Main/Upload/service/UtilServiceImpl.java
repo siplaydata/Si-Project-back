@@ -1,6 +1,7 @@
 package com.example.cocktail.Main.Upload.service;
 
-import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
+import com.example.cocktail.CocktailSearch.dto.SearchDTO;
+import com.example.cocktail.Main.Upload.dto.RecipeDTO;
 import com.example.cocktail.Main.Upload.model.*;
 import com.example.cocktail.Main.Upload.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -87,18 +88,19 @@ public class UtilServiceImpl implements UtilService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<RecipeResponseDTO> getRecipes(List<String> ingredientsList) {
+    public List<RecipeDTO> getRecipes(List<String> ingredientsList) {
         Map<Integer, List<String>> ingredientToIngredientsListMap = new HashMap<>();
         Map<Integer, Recipe> recipeMap = buildRecipeMap(ingredientsList, ingredientToIngredientsListMap);
 
-        List<RecipeResponseDTO> responseDTOs = new ArrayList<>();
+        List<RecipeDTO> responseDTOs = new ArrayList<>();
         for (Recipe recipe : recipeMap.values()) {
-            RecipeResponseDTO responseDTO = createRecipeResponseDTO(recipe, ingredientToIngredientsListMap);
+            RecipeDTO responseDTO = createRecipeResponseDTO(recipe, ingredientToIngredientsListMap);
             responseDTOs.add(responseDTO);
         }
         return responseDTOs;
     }
     private boolean isKorean(String text) { return text.chars().anyMatch(c -> c >= '가' && c <= '힣'); }
+
     private Map<Integer, Recipe> buildRecipeMap(List<String> ingredientsList, Map<Integer, List<String>> ingredientToIngredientsListMap) {
         return ingredientsList.stream()
                 .flatMap(ingredient -> {
@@ -106,17 +108,22 @@ public class UtilServiceImpl implements UtilService {
 
                     if (isKorean(ingredient)) {
                         ingredientStream = ingredientRepository.findByKoreanAlcoholContainingIgnoreCase(ingredient).stream();
+                        if (ingredientStream.noneMatch(Objects::isNull)) {
+                            ingredientStream = ingredientRepository.findByKoreanIngredientContainingIgnoreCase(ingredient).stream();
+                        }
                     } else {
                         ingredientStream = ingredientRepository.findByEnglishAlcoholContainingIgnoreCase(ingredient).stream();
+                        if (ingredientStream.noneMatch(Objects::isNull)) {
+                            ingredientStream = ingredientRepository.findByEnglishIngredientContainingIgnoreCase(ingredient).stream();
+                        }
                     }
                     return ingredientStream
-
-                        .peek(foundIngredient -> {
-                            int ingredientId = foundIngredient.getId();
-                            ingredientToIngredientsListMap
-                                    .computeIfAbsent(ingredientId, key -> new ArrayList<>())
-                                    .add(ingredient);
-                        });
+                            .peek(foundIngredient -> {
+                                int ingredientId = foundIngredient.getId();
+                                ingredientToIngredientsListMap
+                                        .computeIfAbsent(ingredientId, key -> new ArrayList<>())
+                                        .add(ingredient);
+                            });
                 })
                 .map(Ingredient::getId)
                 .flatMap(ingredientId -> recipeIngredientRepository.findByIngredientId(ingredientId).stream())
@@ -127,30 +134,23 @@ public class UtilServiceImpl implements UtilService {
                         recipeId -> recipeRepository.findById(recipeId).orElse(new Recipe())
                 ));
     }
-
-    private RecipeResponseDTO createRecipeResponseDTO(Recipe recipe, Map<Integer, List<String>> ingredientToIngredientsListMap) {
-        RecipeResponseDTO responseDTO = new RecipeResponseDTO();
-
+    private RecipeDTO createRecipeResponseDTO(Recipe recipe, Map<Integer, List<String>> ingredientToIngredientsListMap) {
         List<String> inputValues = ingredientToIngredientsListMap.get(recipe.getRecipeIngredients().get(0).getIngredientId());
         String ingredientType = recipe.getRecipeIngredients().stream()
                 .map(recipeIngredient -> recipeIngredient.getIngredient().getKoreanIngredient())
                 .distinct()
                 .collect(Collectors.joining(", "));
 
-        Cocktail cocktail = cocktailRepository.findById(recipe.getId());
-
-        responseDTO.setUserInputData(String.join(", ", inputValues));
-        responseDTO.setCocktailKorean(cocktail.getKoreanName());
-        responseDTO.setCocktailEnglish(cocktail.getEnglishName());
-//        responseDTO.setCocktailKorean(recipe.getCocktail().getKoreanName());
-//        responseDTO.setCocktailEnglish(recipe.getCocktail().getEnglishName());
-        responseDTO.setIngredientType(ingredientType);
-        responseDTO.setIngredients(recipe.getIngredients());
-        responseDTO.setCocktailMethod(recipe.getMethod());
-        responseDTO.setGarnish(recipe.getGarnish());
-
-        responseDTO.setImage(imagesRepository.findById(recipe.getId()).getPicture());
-//        responseDTO.setImage(recipe.getImages().getPicture());
-        return responseDTO;
+        return new RecipeDTO(
+                recipe.getId(),
+                ingredientType,
+                String.join(", ", inputValues),
+                recipe.getCocktailName().getKoreanName(),
+                recipe.getCocktailName().getEnglishName(),
+                recipe.getIngredients(),
+                recipe.getMethod(),
+                recipe.getGarnish(),
+                recipe.getImages().getPicture()
+        );
     }
 }

@@ -13,4 +13,8 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Integer>
     List<Ingredient> findByEnglishAlcoholContainingIgnoreCase(String ingredient);
 
     List<Ingredient> findByKoreanAlcoholContainingIgnoreCase(String ingredient);
+
+    List<Ingredient> findByKoreanIngredientContainingIgnoreCase(String ingredient);
+
+    List<Ingredient> findByEnglishIngredientContainingIgnoreCase(String ingredient);
 }

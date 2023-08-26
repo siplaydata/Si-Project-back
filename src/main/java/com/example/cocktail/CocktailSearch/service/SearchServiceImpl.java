@@ -23,17 +23,14 @@ public class SearchServiceImpl implements SearchService{
     private SearchImagesRepository searchImagesRepository;
 
     private SearchDTO mapToSearchDTO(Search search) {
-        SearchName searchName = searchNameRepository.findById(search.getId()).orElse(new SearchName());
-        SearchImages searchImages = searchImagesRepository.findById(search.getId()).orElse(new SearchImages());
-
         return new SearchDTO(
                 search.getId(),
                 search.getIngredients(),
                 search.getMethod(),
                 search.getGarnish(),
-                searchName.getKoreanName(),
-                searchName.getEnglishName(),
-                searchImages.getPicture()
+                search.getCocktailName().getKoreanName(),
+                search.getCocktailName().getEnglishName(),
+                search.getImages().getPicture()
         );
     }
     @Override

@@ -1,8 +1,13 @@
 package com.example.cocktail.CocktailSearch.model;
 
+import com.example.cocktail.Main.Upload.model.CocktailName;
+import com.example.cocktail.Main.Upload.model.Images;
+import com.example.cocktail.Main.Upload.model.RecipeIngredient;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,4 +26,12 @@ public class Search {
 
     @Column(name = "garnish")
     private String garnish;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    private CocktailName cocktailName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Images images;
 }

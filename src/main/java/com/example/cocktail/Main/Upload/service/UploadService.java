@@ -1,9 +1,6 @@
 package com.example.cocktail.Main.Upload.service;
 
-import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
-import com.example.cocktail.Main.Upload.repository.IngredientRepository;
-import com.example.cocktail.Main.Upload.repository.RecipeIngredientRepository;
-import com.example.cocktail.Main.Upload.repository.RecipeRepository;
+import com.example.cocktail.Main.Upload.dto.RecipeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +12,7 @@ public class UploadService {
     @Autowired
     private UtilService utilService;
 
-    private List<RecipeResponseDTO> withTextPictureData(List<String> textData, List<MultipartFile> pictureData) {
+    private List<RecipeDTO> withTextPictureData(List<String> textData, List<MultipartFile> pictureData) {
         List<MultipartFile> uniquePictureData = utilService.removeDuplicatePictureData(pictureData);
         List<String> responseData = utilService.sendToFlaskServer(uniquePictureData);
 
@@ -26,13 +23,13 @@ public class UploadService {
         return utilService.getRecipes(uniqueResults);
     }
 
-    private List<RecipeResponseDTO> onlyTextData(List<String> textData) {
+    private List<RecipeDTO> onlyTextData(List<String> textData) {
         List<String> setIngredientList = utilService.removeDuplicateTextData(textData);
 
         return  utilService.getRecipes(setIngredientList);
     }
 
-    private List<RecipeResponseDTO> onlyPictureData(List<MultipartFile> pictureData) {
+    private List<RecipeDTO> onlyPictureData(List<MultipartFile> pictureData) {
         List<MultipartFile> uniquePictureData = utilService.removeDuplicatePictureData(pictureData);
         List<String> responseData = utilService.sendToFlaskServer(uniquePictureData);
         List<String> setIngredientList = utilService.removeDuplicateTextData(responseData);
@@ -40,7 +37,7 @@ public class UploadService {
         return utilService.getRecipes(setIngredientList);
     }
 
-    public List<RecipeResponseDTO> handleUploadProcess(List<String> textData, List<MultipartFile> pictureData) {
+    public List<RecipeDTO> handleUploadProcess(List<String> textData, List<MultipartFile> pictureData) {
         try {
             if (textData != null && pictureData != null) {
                 return withTextPictureData(textData, pictureData);

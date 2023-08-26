@@ -1,8 +1,7 @@
 package com.example.cocktail.Main.Upload.controller;
 
-import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
+import com.example.cocktail.Main.Upload.dto.RecipeDTO;
 import com.example.cocktail.Main.Upload.service.UploadService;
-import com.example.cocktail.Main.Upload.service.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,10 +14,9 @@ import java.util.Objects;
 public class UploadController {
     @Autowired
     private UploadService uploadService;
-    @Autowired
-    private UtilService utilService;
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MAX_NUMBER_OF_PICTURE = 3;
+
     private void validateTextAndPictureData(List<String> textData, List<MultipartFile> pictureData) {
         if ((textData == null || textData.isEmpty()) && (pictureData == null || pictureData.isEmpty())) {
             throw new IllegalArgumentException("사진 또는 텍스트 중 하나 이상을 입력하세요.");
@@ -46,8 +44,8 @@ public class UploadController {
         }
     }
     @PostMapping
-    public List<RecipeResponseDTO> uploadData(@RequestParam(value = "textData", required = false) List<String> textData,
-                                       @RequestParam(value = "pictureData", required = false) List<MultipartFile> pictureData
+    public List<RecipeDTO> uploadData(@RequestParam(value = "textData", required = false) List<String> textData,
+                                      @RequestParam(value = "pictureData", required = false) List<MultipartFile> pictureData
     ) {
         validateTextAndPictureData(textData, pictureData);
         return uploadService.handleUploadProcess(textData, pictureData);
