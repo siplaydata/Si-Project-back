@@ -142,12 +142,15 @@ public class UtilServiceImpl implements UtilService {
         responseDTO.setUserInputData(String.join(", ", inputValues));
         responseDTO.setCocktailKorean(cocktail.getKoreanName());
         responseDTO.setCocktailEnglish(cocktail.getEnglishName());
+//        responseDTO.setCocktailKorean(recipe.getCocktail().getKoreanName());
+//        responseDTO.setCocktailEnglish(recipe.getCocktail().getEnglishName());
         responseDTO.setIngredientType(ingredientType);
         responseDTO.setIngredients(recipe.getIngredients());
         responseDTO.setCocktailMethod(recipe.getMethod());
         responseDTO.setGarnish(recipe.getGarnish());
 
         responseDTO.setImage(imagesRepository.findById(recipe.getId()).getPicture());
+//        responseDTO.setImage(recipe.getImages().getPicture());
         return responseDTO;
     }
 }

@@ -28,6 +28,10 @@ public class Recipe {
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cocktail_id")
+    @JoinColumn(name = "cocktail_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Cocktail cocktail;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "image_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    private Images images;
 }
