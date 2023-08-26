@@ -5,6 +5,7 @@ import com.example.cocktail.CocktailSearch.service.CocktailSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,9 +15,12 @@ import java.util.List;
 public class CocktailSearchController {
     @Autowired
     private CocktailSearchService cocktailSearchService;
-
-    @GetMapping("/data")
-    public List<SearchDTO> searchDTOS (){
-        return null;
+    @GetMapping
+    public List<SearchDTO> getAllCocktails() {
+        return cocktailSearchService.searchAllCocktail();
+    }
+    @GetMapping("/cocktail")
+    public List<SearchDTO> searchCocktails (@RequestParam(required = false) String keyword) {
+        return cocktailSearchService.searchCocktailsByKeyword(keyword);
     }
 }

@@ -1,15 +1,13 @@
-package com.example.cocktail.Main.Upload.model;
+package com.example.cocktail.CocktailSearch.model;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
 @Table(name = "recipe")
-public class Recipe {
+public class Search {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,11 +21,4 @@ public class Recipe {
 
     @Column(name = "garnish")
     private String garnish;
-
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cocktail_id")
-    private Cocktail cocktail;
 }

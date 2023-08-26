@@ -2,7 +2,7 @@ package com.example.cocktail.Main.Upload.service;
 
 import com.example.cocktail.Main.Upload.dto.RecipeResponseDTO;
 import com.example.cocktail.Main.Upload.repository.IngredientRepository;
-import com.example.cocktail.Main.Upload.repository.PairRepository;
+import com.example.cocktail.Main.Upload.repository.RecipeIngredientRepository;
 import com.example.cocktail.Main.Upload.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class UploadService {
     @Autowired
     private IngredientRepository ingredientRepository;
     @Autowired
-    private PairRepository pairRepository;
+    private RecipeIngredientRepository recipeIngredientRepository;
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
