@@ -1,4 +1,4 @@
-package com.example.cocktail.Main.Upload.model;
+package com.example.cocktail.Main.Upload.model.Recipe;
 
 import lombok.Data;
 
@@ -15,4 +15,7 @@ public class Images {
 
     @Column(name = "picture")
     private String picture;
+
+    @OneToOne(mappedBy = "images", fetch = FetchType.LAZY)
+    private Recipe recipe;
 }

@@ -1,14 +1,15 @@
-package com.example.cocktail.Main.Upload.model;
+package com.example.cocktail.Main.Upload.model.Recipe_Ingredient;
 
+import com.example.cocktail.Main.Upload.model.Ingredient_Alcohol.Ingredient;
+import com.example.cocktail.Main.Upload.model.Recipe.Recipe;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Data
 @Entity
 @Table(name = "recipe_ingredient")
-public class RecipeIngredient {
+public class Recipe_Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_id")

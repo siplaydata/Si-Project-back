@@ -1,5 +1,6 @@
-package com.example.cocktail.Main.Upload.model;
+package com.example.cocktail.Main.Upload.model.Recipe;
 
+import com.example.cocktail.Main.Upload.model.Recipe_Ingredient.Recipe_Ingredient;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -25,13 +26,13 @@ public class Recipe {
     private String garnish;
 
     @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+    private List<Recipe_Ingredient> recipeIngredients = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cocktail_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
     private Cocktail cocktail;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "image_id", referencedColumnName = "id", insertable = false, updatable = false)
-//    private Images images;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Images images;
 }
