@@ -3,7 +3,7 @@ package com.example.cocktail.CBTI.service;
 
 import com.example.cocktail.CBTI.dto.CocktailDTO;
 import com.example.cocktail.CBTI.model.CBTI;
-import com.example.cocktail.CBTI.model.Cocktail;
+import com.example.cocktail.CBTI.model.CocktailName;
 import com.example.cocktail.CBTI.model.CocktailImages;
 import com.example.cocktail.CBTI.repository.CBTIRepository;
 import com.example.cocktail.CBTI.repository.CBTINameRepository;
@@ -25,15 +25,15 @@ public class CBTIService {
     private static int MIN_LEVEL = 0;
     private static int MAX_LEVEL = 5;
 
-    private CocktailDTO mapCBTIToCocktailDTO(CBTI cbti, Cocktail cocktail, CocktailImages image) {
+    private CocktailDTO mapCBTIToCocktailDTO(CBTI cbti, CocktailName cocktailName, CocktailImages image) {
         CocktailDTO cocktailDTO = new CocktailDTO();
 
         cocktailDTO.setId(cbti.getId());
         cocktailDTO.setLevel(cbti.getLevel());
         cocktailDTO.setTaste(cbti.getTaste());
         cocktailDTO.setPlace(cbti.getPlace());
-        cocktailDTO.setKoreanName(cocktail.getKoreanName());
-        cocktailDTO.setEnglishName(cocktail.getEnglishName());
+        cocktailDTO.setKoreanName(cocktailName.getKoreanName());
+        cocktailDTO.setEnglishName(cocktailName.getEnglishName());
         cocktailDTO.setImage(image.getPicture());
 
         return cocktailDTO;
@@ -50,9 +50,9 @@ public class CBTIService {
 
         return cbtiList.stream()
                 .map(cbti -> {
-                    Cocktail cocktail = CBTINameRepository.findById(cbti.getId()).orElse(new Cocktail());
+                    CocktailName cocktailName = CBTINameRepository.findById(cbti.getId()).orElse(new CocktailName());
                     CocktailImages image = CBTIImagesRepository.findById(cbti.getId()).orElse(new CocktailImages());
-                    return mapCBTIToCocktailDTO(cbti, cocktail, image);
+                    return mapCBTIToCocktailDTO(cbti, cocktailName, image);
                 })
                 .collect(Collectors.toList());
     }

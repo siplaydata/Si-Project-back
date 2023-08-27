@@ -1,8 +1,10 @@
-package com.example.cocktail.Main.Upload.model;
+package com.example.cocktail.Main.Upload.model.Ingredient_Alcohol;
 
+import com.example.cocktail.Main.Upload.model.Recipe_Ingredient.Recipe_Ingredient;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,12 +22,9 @@ public class Ingredient {
     @Column(name = "ingredient_english")
     private String englishIngredient;
 
-    @Column(name = "alcohol_korean")
-    private String koreanAlcohol;
-
-    @Column(name = "alcohol_english")
-    private String englishAlcohol;
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
+    private List<Ingredient_Alcohol> ingredientAlcohols = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient")
-    private List<RecipeIngredient> recipeIngredients;
+    private List<Recipe_Ingredient> recipeIngredients;
 }

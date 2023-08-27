@@ -19,8 +19,8 @@ public class TextChoiceServiceImpl implements TextChoiceService {
         dto.setIngredientKorean(textChoice.getIngredientKorean());
         dto.setIngredientEnglish(textChoice.getIngredientEnglish());
 
-        dto.setAlcoholKorean(textChoice.getAlcoholKorean());
-        dto.setAlcoholEnglish(textChoice.getAlcoholEnglish());
+//        dto.setAlcoholKorean(textChoice.getAlcoholKorean());
+//        dto.setAlcoholEnglish(textChoice.getAlcoholEnglish());
         return dto;
     }
     @Override

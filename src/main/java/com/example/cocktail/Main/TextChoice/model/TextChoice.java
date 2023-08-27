@@ -19,9 +19,9 @@ public class TextChoice {
     @Column(name = "ingredient_english")
     private String ingredientEnglish;
 
-    @Column(name = "alcohol_korean")
-    private String alcoholKorean;
-
-    @Column(name = "alcohol_english")
-    private String alcoholEnglish;
+//    @Column(name = "alcohol_korean")
+//    private String alcoholKorean;
+//
+//    @Column(name = "alcohol_english")
+//    private String alcoholEnglish;
 }

@@ -1,18 +1,15 @@
 package com.example.cocktail.CocktailSearch.model;
 
-import com.example.cocktail.Main.Upload.model.CocktailName;
-import com.example.cocktail.Main.Upload.model.Images;
-import com.example.cocktail.Main.Upload.model.RecipeIngredient;
+import com.example.cocktail.Main.Upload.model.Recipe.Cocktail;
+import com.example.cocktail.Main.Upload.model.Recipe.Images;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
 @Table(name = "recipe")
-public class Search {
+public class SearchRecipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,7 +26,7 @@ public class Search {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
-    private CocktailName cocktailName;
+    private Cocktail cocktail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)

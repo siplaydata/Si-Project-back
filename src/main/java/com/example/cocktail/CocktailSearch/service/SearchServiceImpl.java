@@ -1,12 +1,11 @@
 package com.example.cocktail.CocktailSearch.service;
 
 import com.example.cocktail.CocktailSearch.dto.SearchDTO;
-import com.example.cocktail.CocktailSearch.model.Search;
-import com.example.cocktail.CocktailSearch.model.SearchImages;
+import com.example.cocktail.CocktailSearch.model.SearchRecipe;
 import com.example.cocktail.CocktailSearch.model.SearchName;
 import com.example.cocktail.CocktailSearch.repository.SearchImagesRepository;
 import com.example.cocktail.CocktailSearch.repository.SearchNameRepository;
-import com.example.cocktail.CocktailSearch.repository.SearchRepository;
+import com.example.cocktail.CocktailSearch.repository.SearchRecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +15,26 @@ import java.util.stream.Collectors;
 @Service
 public class SearchServiceImpl implements SearchService{
     @Autowired
-    private SearchRepository searchRepository;
+    private SearchRecipeRepository searchRecipeRepository;
     @Autowired
     private SearchNameRepository searchNameRepository;
     @Autowired
     private SearchImagesRepository searchImagesRepository;
 
-    private SearchDTO mapToSearchDTO(Search search) {
+    private SearchDTO mapToSearchDTO(SearchRecipe searchRecipe) {
         return new SearchDTO(
-                search.getId(),
-                search.getIngredients(),
-                search.getMethod(),
-                search.getGarnish(),
-                search.getCocktailName().getKoreanName(),
-                search.getCocktailName().getEnglishName(),
-                search.getImages().getPicture()
+                searchRecipe.getId(),
+                searchRecipe.getIngredients(),
+                searchRecipe.getMethod(),
+                searchRecipe.getGarnish(),
+                searchRecipe.getCocktail().getKoreanName(),
+                searchRecipe.getCocktail().getEnglishName(),
+                searchRecipe.getImages().getPicture()
         );
     }
     @Override
     public List<SearchDTO> searchAllCocktail() {
-        return searchRepository.findAll().stream()
+        return searchRecipeRepository.findAll().stream()
                 .map(this::mapToSearchDTO)
                 .collect(Collectors.toList());
     }
@@ -43,7 +42,7 @@ public class SearchServiceImpl implements SearchService{
     public List<SearchDTO> searchCocktailsByKeyword(String keyword) {
         List<SearchName> searchNames = searchNameRepository.findByKoreanNameContainingOrEnglishNameContaining(keyword, keyword);
         if (searchNames.isEmpty()) {
-            return searchRepository.findByIngredientsContaining(keyword).stream()
+            return searchRecipeRepository.findByIngredientsContaining(keyword).stream()
                     .map(this::mapToSearchDTO)
                     .collect(Collectors.toList());
         }
@@ -53,7 +52,7 @@ public class SearchServiceImpl implements SearchService{
                 .collect(Collectors.toList());
 
         return cocktailIds.stream()
-                .flatMap(id -> searchRepository.findById(id).stream())
+                .flatMap(id -> searchRecipeRepository.findById(id).stream())
                 .map(this::mapToSearchDTO)
                 .collect(Collectors.toList());
     }
