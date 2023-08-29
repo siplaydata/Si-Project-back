@@ -1,0 +1,25 @@
+package com.example.cocktail.CocktailSearch.model.Recipe;
+
+import com.example.cocktail.Main.Upload.model.Recipe.Recipe;
+import lombok.Data;
+
+import javax.persistence.*;
+
+@Data
+@Entity
+@Table(name = "cocktail")
+public class Search_Cocktail {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name_korean")
+    private String koreanName;
+
+    @Column(name = "name_english")
+    private String englishName;
+
+    @OneToOne(mappedBy = "cocktail", fetch = FetchType.LAZY)
+    private Recipe recipe;
+}
